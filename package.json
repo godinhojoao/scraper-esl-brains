@@ -4,16 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node src/index.ts -e ts",
+    "prod": "node dist/app.js",
+    "test": "jest",
+    "build": "tsc",
+    "lint": "npx eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12"
+    "cheerio": "^1.0.0-rc.12",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/request": "^2.48.8",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "eslint": "^7.32.0",
