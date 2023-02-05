@@ -1,9 +1,5 @@
-export interface Post {
-  id: string;
-  level: string;
-  category: string;
-  contentLink: string;
-  name: string;
+export interface PostDownloadLink {
+  postId: string;
   teacherDownloadContentLink: string;
   studentDownloadContentLink: string;
   eLessonDownloadContentLink?: string;
