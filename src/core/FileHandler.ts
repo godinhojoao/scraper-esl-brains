@@ -37,8 +37,8 @@ export class FileHandler {
     if (!fs.existsSync(currentLevelFolder)) { fs.mkdirSync(currentLevelFolder) }
     const currentCategoryFolder = path.join(currentLevelFolder, post.category)
     if (!fs.existsSync(currentCategoryFolder)) { fs.mkdirSync(currentCategoryFolder) }
-    const studentFilePath = path.join(currentCategoryFolder, `student-${post.name}.pdf`)
-    const teacherFilePath = path.join(currentCategoryFolder, `teacher-${post.name}.pdf`)
+    const studentFilePath = path.join(currentCategoryFolder, `${post.name}-student.pdf`)
+    const teacherFilePath = path.join(currentCategoryFolder, `${post.name}-teacher.pdf`)
     let studentContentFile
     let teacherContentFile
     if (!fs.existsSync(studentFilePath)) { studentContentFile = fs.createWriteStream(studentFilePath) }

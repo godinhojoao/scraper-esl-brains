@@ -1,11 +1,7 @@
 []  1. way to get payed content (now it's just working for free version)
-[X] 2. download content files
-[]  3 download google drive files (e-lesson plan)
-[X] 4. create folder for each level -> each category inside of levels
-[X] 5. zip all
-[]  6. refactor code
-[]  7. test all
-[]  8. eslint
-[]  9. ci-cd
-[]  10. host files on s3
-[]  11. enqueue to sqs that is listened by an email worker
+  - set authentication token
+[]  2 download google drive files (e-lesson plan)
+[]  3. test all
+[]  4. ci-cd
+  - eslint
+  - tests

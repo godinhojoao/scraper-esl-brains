@@ -8,7 +8,8 @@
     "prod": "npm run build && node dist/index.js",
     "test": "jest",
     "build": "tsc",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "lint-fix": "npx eslint --fix . "
   },
   "keywords": [],
   "author": "",

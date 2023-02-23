@@ -2,32 +2,40 @@ import cheerio, { Cheerio, CheerioAPI, Element } from 'cheerio'
 import { v4 as uuidv4 } from 'uuid'
 
 import { PartialPost } from '../contracts/PartialPost'
+import { Post } from '../contracts/Post'
 import { PostDownloadLink } from '../contracts/PostDownloadLinks'
+import { isEmptyArray } from './utils/isEmptyArray'
 import { loadUrlData } from './utils/loadUrlData'
+import { mergePostInfos } from './utils/mergePostInfos'
 
 export class EslScraper {
-  URL: string
+  currentCheerioDOM?: CheerioAPI;
 
   constructor (
-    private currentPage: number,
     private readonly currentPlan?: string
   ) {
     this.currentPlan = currentPlan || 'free-english-lesson-plans'
-    this.URL = `https://eslbrains.com/lesson/page/${this.currentPage}?ep_filter_lesson_plan=${this.currentPlan}`
   }
 
-  public async loadPage (): Promise<CheerioAPI> {
-    const body = await loadUrlData(this.URL)
+  public async loadAndSetPage (currentPageNumber: number): Promise<CheerioAPI> {
+    const URL = `https://eslbrains.com/lesson/page/${currentPageNumber}?ep_filter_lesson_plan=${this.currentPlan}`
+    console.log('URL', URL)
+    const body = await loadUrlData(URL)
     const $ = cheerio.load(body)
+    this.currentCheerioDOM = $
     return $
   }
 
-  public async loadNextPage (): Promise<CheerioAPI> {
-    this.currentPage += 1
-    return await this.loadPage()
+  public async getPostsInfos (postsElements: Cheerio<Element>): Promise<Post[]> {
+    const partialInfos: PartialPost[] = this.getPartialPostsInfos(postsElements) || []
+    if (isEmptyArray((partialInfos))) { return [] }
+    const downloadLinks = await this.getAllCurrentPostsDownloadLinks(partialInfos)
+    if (isEmptyArray(downloadLinks)) { return [] }
+    const postsInfos = mergePostInfos(partialInfos, downloadLinks)
+    return postsInfos
   }
 
-  public async getAllCurrentPostsDownloadLinks (partialPostsInfos: PartialPost[]): Promise<PostDownloadLink[]> {
+  private async getAllCurrentPostsDownloadLinks (partialPostsInfos: PartialPost[]): Promise<PostDownloadLink[]> {
     const loadAllPostsPagesPromises = partialPostsInfos.map(post => loadUrlData(post.contentLink))
     const allPostsPages = await Promise.all(loadAllPostsPagesPromises)
     const allPostsDownloadLinks: PostDownloadLink[] = []
@@ -49,21 +57,22 @@ export class EslScraper {
     return allPostsDownloadLinks
   }
 
-  public getPartialPostsInfos ($: CheerioAPI, postsElements: Cheerio<Element>): PartialPost[] {
+  private getPartialPostsInfos (postsElements: Cheerio<Element>): PartialPost[] | void {
+    if (!this.currentCheerioDOM) { return }
     const partialPostsInfos: PartialPost[] = []
     postsElements.each((index, postElement) => {
-      const postLevel = $(postElement)
+      const postLevel = this.currentCheerioDOM?.(postElement)
         .find('.lesson-info-level')
         .first()
         .text()
         .trim()
         .substring(0, 2)
-      const postCategory = $(postElement)
+      const postCategory = this.currentCheerioDOM?.(postElement)
         .find('.btn.btn--orangenobg')
         .first()
         .text()
         .trim()
-      const postContentLink = $(postElement)
+      const postContentLink = this.currentCheerioDOM?.(postElement)
         .find('.bottom_lesson_links .btn.btn--yellowbg')
         .attr('href')
 
