@@ -1,13 +1,16 @@
 import axios, { ResponseType } from 'axios'
 
-export async function loadUrlData (url: string, responseType?: ResponseType): Promise<any> {
+interface RequestConfig {
+  responseType?: ResponseType;
+  headers?: any;
+}
+
+export async function loadUrlData (url: string, requestConfig: RequestConfig = {}): Promise<any> {
   try {
-    const requestConfig: { url: string; method: string; responseType?: ResponseType; } = { url, method: 'GET' }
-    if (responseType) { requestConfig.responseType = responseType }
-    const response = await axios(requestConfig)
+    const response = await axios.get(url, requestConfig)
     return response.data
   } catch (error) {
-    console.log('error', error)
+    console.log('error loading data', error)
     throw Error('Error loading data')
   }
 }

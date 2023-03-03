@@ -18,3 +18,20 @@
 
 ## Run prod:
 - `npm run prod`
+
+## Get all free content:
+- You just need to run the project normally and then you will get
+
+## Get authenticated content:
+- You must have a payed account.
+- You must create a file called `secrets.json` on project's root.
+
+Example `secrets.json`:
+```json
+{
+  "token": "your token here",
+  "currentPlan": "premium-plan"
+}
+```
+
+- To get your token you need to inspect a logged request into esl brains and get the cookie value.

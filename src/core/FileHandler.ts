@@ -15,18 +15,19 @@ export class FileHandler {
         const hasAllPostFiles = !(postFiles && postFiles.studentContentFile && postFiles.teacherContentFile)
         if (hasAllPostFiles) { continue }
         if (postFiles.studentContentFile) {
-          const studentContentToDownloadResponse = await loadUrlData(post.studentDownloadContentLink, 'stream')
+          // there is any token needed? or there is not needed for auth requests ?
+          const studentContentToDownloadResponse = await loadUrlData(post.studentDownloadContentLink, { responseType: 'stream' })
           studentContentToDownloadResponse.pipe(postFiles.studentContentFile)
         }
         if (postFiles.teacherContentFile) {
-          const teacherContentToDownloadResponse = await loadUrlData(post.teacherDownloadContentLink, 'stream')
+          const teacherContentToDownloadResponse = await loadUrlData(post.teacherDownloadContentLink, { responseType: 'stream' })
           teacherContentToDownloadResponse.pipe(postFiles.teacherContentFile)
         }
       }
       await this.zipPostsFolder(postsFolderPath)
       return 'Download finished'
     } catch (error) {
-      console.log('error', error)
+      console.log('error installing post files', error)
       throw Error('Error installing post files')
     }
   }

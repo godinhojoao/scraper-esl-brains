@@ -2,9 +2,10 @@ import { Post } from './contracts/Post'
 import { EslScraper } from './core/EslScraper'
 import { FileHandler } from './core/FileHandler'
 import { isEmptyArray } from './core/utils/isEmptyArray'
+import secrets from './../secrets.json'
 
 (async function () {
-  const eslScraper = new EslScraper()
+  const eslScraper = new EslScraper(secrets.currentPlan, secrets.token)
   let lastPageNumber = 999
   const allPosts: Post[] = []
 
