@@ -1,11 +1,13 @@
 import { Post } from './contracts/Post'
+import { ExistentPlans } from './contracts/ExistentPlans'
 import { EslScraper } from './core/EslScraper'
 import { FileHandler } from './core/FileHandler'
 import { isEmptyArray } from './core/utils/isEmptyArray'
+import { logCurrentProgressPercentage } from './core/utils/logCurrentProgressPercentage'
 import secrets from './../secrets.json'
 
 (async function () {
-  const eslScraper = new EslScraper(secrets.currentPlan, secrets.token)
+  const eslScraper = new EslScraper(secrets.currentPlan as ExistentPlans, secrets.token)
   let lastPageNumber = 999
   const allPosts: Post[] = []
 
@@ -15,8 +17,7 @@ import secrets from './../secrets.json'
       const pageNumber = eslScraper.currentCheerioDOM?.('.lesson-pages :nth-last-child(2)')?.text() || '1'
       lastPageNumber = parseInt(pageNumber)
     }
-    const loadedPagesString = `${currentPageNumber}/${lastPageNumber}`
-    console.log(`Page ${loadedPagesString} loaded!`)
+    logCurrentProgressPercentage('Loaded pages progress', currentPageNumber, lastPageNumber)
 
     const postsElements = eslScraper.currentCheerioDOM?.('.latest_post_bottom')
     if (!postsElements) { continue }

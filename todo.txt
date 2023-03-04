@@ -1,9 +1,1 @@
-[X]  1. way to get payed content (now it's just working for free version)
-  - set authentication token
-[]  2 download google drive files (e-lesson plan)
-[]  3. test all
-[X]  4. ci-cd
-  - eslint
-  - tests
-
-// there are 199 posts on premium plan ( test it )
+[ ] 1. test all

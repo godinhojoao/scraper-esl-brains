@@ -1,5 +1,6 @@
 import cheerio, { Cheerio, CheerioAPI, Element } from 'cheerio'
 import { v4 as uuidv4 } from 'uuid'
+import { ExistentPlans } from '../contracts/ExistentPlans'
 
 import { PartialPost } from '../contracts/PartialPost'
 import { Post } from '../contracts/Post'
@@ -13,12 +14,11 @@ export class EslScraper {
   headers?: any;
 
   constructor (
-    private readonly currentPlan?: string,
+    private readonly currentPlan?: ExistentPlans,
     private readonly token?: string
   ) {
     this.currentPlan = currentPlan || 'free-english-lesson-plans'
-    if (this.token) {
-      // verify if these comments are really needed
+    if (this.token && currentPlan !== 'free-english-lesson-plans') {
       this.headers = {
         authority: 'eslbrains.com',
         accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -26,15 +26,9 @@ export class EslScraper {
         'cache-control': 'no-cache',
         cookie: token,
         pragma: 'no-cache',
-        // 'sec-ch-ua': '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
-        // 'sec-ch-ua-mobile': '?0',
-        // 'sec-ch-ua-platform': '"Linux"',
         'sec-fetch-dest': 'document',
         'sec-fetch-mode': 'navigate',
         'sec-fetch-site': 'same-origin'
-        // 'sec-fetch-user': '?1',
-        // 'upgrade-insecure-requests': '1',
-        // 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
       }
     }
   }

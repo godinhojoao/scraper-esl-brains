@@ -1,5 +1,5 @@
 ## What is this project ?
-- An web scraper that get all content of https://eslbrains.com/ classes and download it's pdfs on folders with an explanatory structure that has information about class level and category. And then send this content by email to those who need it.
+- An web scraper that get all content of https://eslbrains.com/ classes and download it's pdfs on folders with an explanatory structure that has information about class level and category.
 
 ## Purpose of this scraper:
 - I've created it for english teachers that pay for `esl brains`. With this project it's possible to just pay one month and then install all contents.
