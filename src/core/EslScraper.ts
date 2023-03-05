@@ -1,5 +1,5 @@
 import cheerio, { Cheerio, CheerioAPI, Element } from 'cheerio'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import { ExistentPlans } from '../contracts/ExistentPlans'
 
 import { PartialPost } from '../contracts/PartialPost'
@@ -94,7 +94,7 @@ export class EslScraper {
       if (postLevel && postCategory && postContentLink) {
         const regexpToGetNameInsideURL = /https:\/\/eslbrains.com\/*/
         partialPostsInfos.push({
-          id: uuidv4(),
+          id: randomUUID(),
           name: postContentLink.replace(regexpToGetNameInsideURL, '').replace('/', ''),
           level: postLevel,
           category: postCategory,
