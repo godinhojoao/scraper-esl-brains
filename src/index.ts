@@ -1,13 +1,11 @@
 import { Post } from './contracts/Post'
-import { ExistentPlans } from './contracts/ExistentPlans'
 import { EslScraper } from './core/EslScraper'
 import { FileHandler } from './core/FileHandler'
 import { isEmptyArray } from './core/utils/isEmptyArray'
 import { logCurrentProgressPercentage } from './core/utils/logCurrentProgressPercentage'
-import secrets from './../secrets.json'
 
 (async function () {
-  const eslScraper = new EslScraper(secrets.currentPlan as ExistentPlans, secrets.token)
+  const eslScraper = new EslScraper()
   let lastPageNumber = 999
   const allPosts: Post[] = []
 

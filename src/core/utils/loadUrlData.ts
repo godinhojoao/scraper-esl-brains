@@ -1,4 +1,5 @@
 import axios, { ResponseType } from 'axios'
+import { authHeaders } from '../../config'
 
 interface RequestConfig {
   responseType?: ResponseType;
@@ -6,6 +7,7 @@ interface RequestConfig {
 }
 
 export async function loadUrlData (url: string, requestConfig: RequestConfig = {}): Promise<any> {
+  requestConfig.headers = authHeaders
   try {
     const response = await axios.get(url, requestConfig)
     return response.data

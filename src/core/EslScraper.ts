@@ -1,41 +1,18 @@
 import cheerio, { Cheerio, CheerioAPI, Element } from 'cheerio'
 import { randomUUID } from 'crypto'
-import { ExistentPlans } from '../contracts/ExistentPlans'
-
 import { PartialPost } from '../contracts/PartialPost'
 import { Post } from '../contracts/Post'
 import { PostDownloadLink } from '../contracts/PostDownloadLinks'
 import { isEmptyArray } from './utils/isEmptyArray'
 import { loadUrlData } from './utils/loadUrlData'
 import { mergePostInfos } from './utils/mergePostInfos'
+import secrets from './../../secrets.json'
 
 export class EslScraper {
-  currentCheerioDOM?: CheerioAPI;
-  headers?: any;
-
-  constructor (
-    private readonly currentPlan?: ExistentPlans,
-    private readonly token?: string
-  ) {
-    this.currentPlan = currentPlan || 'free-english-lesson-plans'
-    if (this.token && currentPlan !== 'free-english-lesson-plans') {
-      this.headers = {
-        authority: 'eslbrains.com',
-        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'accept-language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-        'cache-control': 'no-cache',
-        cookie: token,
-        pragma: 'no-cache',
-        'sec-fetch-dest': 'document',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-site': 'same-origin'
-      }
-    }
-  }
-
+  public currentCheerioDOM?: CheerioAPI;
   public async loadAndSetPage (currentPageNumber: number): Promise<CheerioAPI> {
-    const URL = `https://eslbrains.com/lesson/page/${currentPageNumber}?ep_filter_lesson_plan=${this.currentPlan}`
-    const body = await loadUrlData(URL, { headers: this.headers || {} })
+    const URL = `https://eslbrains.com/lesson/page/${currentPageNumber}?ep_filter_lesson_plan=${secrets.currentPlan}`
+    const body = await loadUrlData(URL)
     const $ = cheerio.load(body)
     this.currentCheerioDOM = $
     return $
@@ -51,7 +28,7 @@ export class EslScraper {
   }
 
   private async getAllCurrentPostsDownloadLinks (partialPostsInfos: PartialPost[]): Promise<PostDownloadLink[]> {
-    const loadAllPostsPagesPromises = partialPostsInfos.map(post => loadUrlData(post.contentLink, { headers: this.headers || {} }))
+    const loadAllPostsPagesPromises = partialPostsInfos.map(post => loadUrlData(post.contentLink))
     const allPostsPages = await Promise.all(loadAllPostsPagesPromises)
     const allPostsDownloadLinks: PostDownloadLink[] = []
     allPostsPages
